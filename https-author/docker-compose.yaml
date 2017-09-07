@@ -1,0 +1,12 @@
+version: '3'
+services:
+    author:   
+        container_name: author
+        image: author:6.1
+        environment:
+            CQ_RUNMODE: author
+        volumes:
+            - ./aem/volumes/author/crx-quickstart/logs:/opt/aem/crx-quickstart/logs
+        ports:
+            - "4502:4502"
+            - "5433:5433"     

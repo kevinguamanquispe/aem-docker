@@ -1,0 +1,29 @@
+# Dockerized AEM 6.1 author image
+
+FROM aem-base:6.1
+
+ENV CQ_RUNMODE author,nosamplecontent
+ENV CQ_PORT 4502
+ENV CQ_HTTPS_PORT 5433
+ENV CQ_JVM_OPTS -XX:MaxPermSize=512M -Xmx2048m
+
+ADD ./postInstall.sh $AEM_WORKING_DIR/postInstall.sh
+ 
+RUN chmod 777 $AEM_WORKING_DIR/postInstall.sh
+
+# Setup SSL
+RUN mkdir -p crx-quickstart/ssl && \
+	keytool -genkeypair -keyalg RSA -validity 3650 -alias cqse \
+	-keystore crx-quickstart/ssl/keystorename.keystore \
+	-keypass keypassword -storepass storepassword \
+	-dname "CN=Host Name, OU=Group Name, O=Company Name,L=City Name, S=State, C=Country_ Code"
+
+RUN echo sling.run.modes=${CQ_RUNMODE} >> crx-quickstart/conf/sling.properties && \
+    crx-quickstart/bin/start && \
+    until $(curl -u admin:admin --output /dev/null --silent --head --fail http://localhost:$CQ_PORT); do printf '.'; sleep 5; done && \               
+	crx-quickstart/bin/stop && \
+    echo "$(grep -v "sling.run.modes" crx-quickstart/conf/sling.properties)" >crx-quickstart/conf/sling.properties
+
+EXPOSE $CQ_PORT $CQ_HTTPS_PORT
+
+CMD java $CQ_JVM_OPTS -jar $AEM_QUICKSTART_FILE -p $CQ_PORT -r $CQ_RUNMODE

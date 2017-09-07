@@ -6,9 +6,9 @@
 - AEM license.properties file
 
 ## Start aem instance 
-Before starting aem container you need to place the AEM jar and license file under `ddcom-docker/aem/dockerfiles`. The jar file needs to be renamed to `adobe-cq-wcm.jar`.
+Before starting aem container you need to place the AEM jar and license file under `https-author/aem/dockerfiles`. The jar file needs to be renamed to `adobe-cq-wcm.jar`.
 
-1. Open terminal and change directory to the root docker directory `ddcom-aem/ddcom-docker`
+1. Open terminal and change directory to the root docker directory `https-author`
 2. Run the startup script: `./startup.sh`
 
 The script should take about 10 minutes to run. You will know that it is complete when you see the following message :

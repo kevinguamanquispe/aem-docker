@@ -1,0 +1,12 @@
+version: '3'
+services:
+    author:   
+        container_name: publish
+        image: author:6.1
+        environment:
+            CQ_RUNMODE: publish
+        volumes:
+            - ./aem/volumes/publish/crx-quickstart/logs:/opt/aem/crx-quickstart/logs
+        ports:
+            - "4503:4503"
+            - "5433:5433"     

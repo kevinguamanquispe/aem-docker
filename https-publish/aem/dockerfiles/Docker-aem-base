@@ -1,0 +1,20 @@
+# Dockerized AEM 6.XX
+
+FROM teenak/ubuntu-14-04-java8
+
+ENV AEM_QUICKSTART_FILE adobe-cq-wcm.jar
+ENV AEM_WORKING_DIR /opt/aem
+
+# Add quick-start file and license properties
+ADD ./$AEM_QUICKSTART_FILE $AEM_WORKING_DIR/$AEM_QUICKSTART_FILE
+ADD ./license.properties $AEM_WORKING_DIR/license.properties
+
+RUN apt-get update && \
+	apt-get install curl -y
+	
+# Unpack AEM quick-start
+
+RUN	java -jar $AEM_WORKING_DIR/$AEM_QUICKSTART_FILE -r nosamplecontent -unpack
+
+
+WORKDIR $AEM_WORKING_DIR
